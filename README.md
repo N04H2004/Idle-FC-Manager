@@ -1,53 +1,40 @@
 # ⚽ Idle FC Manager
 
-Un jeu **idle / incrémental** de gestion de club de football, jouable dans le navigateur.
-Partez de la division Régionale avec une équipe d'amateurs et menez votre club jusqu'au titre en **Ligue Élite** —
-le club continue de jouer, de s'entraîner et de gagner de l'argent même quand vous fermez l'onglet.
+![Idle FC Manager](cover.jpg)
+
+Jeu **idle / tycoon de football** jouable dans le navigateur, en français et en anglais.
+Pars de la Ligue 4 avec un club de quartier, monte jusqu'en Ligue 1, puis remporte la Ligue des Légendes.
 
 [![Déployer avec Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FN04H2004%2FIdle-FC-Manager&project-name=idle-fc-manager)
 
-## Fonctionnalités
+## Contenu
 
-- **Championnat automatique** : 10 clubs par division, 18 journées aller-retour, une journée toutes les 45 s.
-- **5 divisions** avec promotions (top 2) et relégations (2 derniers), primes de fin de saison et palmarès.
-- **Effectif** : progression des joueurs par l'XP (entraînement passif, matchs, clics), potentiel, âge, retraites.
-- **XI automatique** selon la formation choisie (4-4-2, 4-3-3, 3-5-2, 5-3-2, 4-5-1) et **tactique** (défensive / équilibrée / offensive).
-- **Marché des transferts** renouvelé régulièrement, achat / revente de joueurs.
-- **Infrastructures** : stade, centre d'entraînement, centre de formation (jeunes talents), marketing, cellule de recrutement.
-- **Économie** : sponsors, billetterie, primes de victoire, masse salariale.
-- **Progression hors ligne** (jusqu'à 4 h) avec récapitulatif au retour, sauvegarde automatique (`localStorage`).
-- Interface responsive (mobile & desktop), en français.
+- **Revenus passifs** : boutique, stade, sponsors, restaurant VIP, chaîne du club, multipliés par les supporters, la division et la série de victoires.
+- **Championnat** de 10 clubs sur 18 journées, avec montées (licence requise), descentes et rivaux.
+- **Effectif** : compo automatique ou manuelle (4-4-2), forme des joueurs, salaires, centre de formation.
+- **Marché des transferts** et **boosters** avec animation d'ouverture des cartes (Commun, Rare, Épique, Légendaire).
+- **Prestige** (refondations et bonus permanents), objectifs du jour, cadeaux de connexion, succès et records.
+- Blason, maillot et bannière personnalisables ; musique et effets sonores générés dans le navigateur.
+- Didacticiel guidé, sauvegarde automatique (`localStorage`) et gains hors ligne.
 
-## Stack
+## Structure
 
-React 18 + TypeScript + Vite. Aucun backend : tout tourne dans le navigateur.
-Le moteur de jeu (`src/game/engine.ts`) est indépendant de l'interface et testé avec Vitest.
+Le jeu tient dans un seul fichier, sans dépendance ni étape de build :
 
 ```
-src/
-  game/        moteur du jeu (types, constantes, simulation, store, tests)
-  components/  onglets de l'interface (Club, Effectif, Transferts, Infrastructures, Championnat)
+index.html   le jeu complet (HTML + CSS + JavaScript)
+cover.jpg    image de couverture
+vercel.json  configuration Vercel (site statique)
 ```
 
-## Développement
+Pour jouer en local, ouvre `index.html` dans un navigateur, ou lance un petit serveur :
 
 ```bash
-npm install
-npm run dev      # serveur de dev
-npm test         # tests du moteur (calendrier, saisons, équilibrage)
-npm run build    # build de production dans dist/
+python3 -m http.server 8000
 ```
 
 ## Déploiement sur Vercel
 
-Le dépôt contient un `vercel.json` (framework Vite, sortie `dist`).
-
-1. Cliquez sur le bouton **Déployer avec Vercel** ci-dessus, ou allez sur <https://vercel.com/new> et importez le dépôt `N04H2004/Idle-FC-Manager`.
-2. Vercel détecte automatiquement Vite : laissez les réglages par défaut et cliquez sur **Deploy**.
-3. Chaque push sur la branche de production redéploie le jeu automatiquement (et chaque PR obtient une preview).
-
-Ou en ligne de commande :
-
-```bash
-npx vercel --prod
-```
+1. Va sur <https://vercel.com/new> (ou clique sur le bouton ci-dessus) et importe le dépôt `N04H2004/Idle-FC-Manager`.
+2. Laisse **Framework Preset : Other**, sans commande de build ni dossier de sortie.
+3. Clique sur **Deploy**. Chaque push redéploie le jeu automatiquement.
