@@ -911,7 +911,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
 .flip.float .tilt{animation:bob 1.6s ease-in-out infinite}
 @keyframes bob{50%{translate:0 -10px}}
 .flip.glow .cb{animation:gpulse .9s ease-in-out infinite}
-.flip.g-rare{--gc:var(--c-rare)}.flip.g-epic{--gc:var(--c-epic)}.flip.g-legendary{--gc:var(--c-leg)}
+.flip.g-common{--gc:#ffffff}.flip.g-rare{--gc:var(--c-rare)}.flip.g-epic{--gc:var(--c-epic)}.flip.g-legendary{--gc:var(--c-leg)}
 @keyframes gpulse{0%,100%{box-shadow:0 0 18px 4px var(--gc),6px 6px 0 #000}50%{box-shadow:0 0 50px 18px var(--gc),6px 6px 0 #000}}
 .flip.rumble .flip-in{animation:wig .09s infinite}
 .flip-in.spin{animation:fspin .75s cubic-bezier(.15,.7,.25,1) forwards}
@@ -1370,7 +1370,7 @@ function showPack(pk,type,cards,after){
 
   /* 1. le booster se charge : 3 secousses de plus en plus fortes */
   function charge(){
-    const pack=$('#pack'),aura=$('#aura'),c=cards[0],big=RAR[c.rarity].order>=2,col=big?glowOf(c.rarity):'#ffffff';
+    const pack=$('#pack'),aura=$('#aura'),c=cards[0],col='#ffffff';
     aura.style.setProperty('--ac',col);
     if(REDUCED){tearOpen();return}
     [0,1,2].forEach(k=>later(()=>{pack.classList.remove('jolt');void pack.offsetWidth;pack.style.setProperty('--j',(k+1));pack.classList.add('jolt');
@@ -1380,12 +1380,12 @@ function showPack(pk,type,cards,after){
   /* 2. déchirure + la carte jaillit en tournant */
   function tearOpen(){
     const pack=$('#pack');pack.classList.add('torn');sfx.tear();flash();
-    const c=cards[0];spark(26,glowOf(c.rarity));tone(90,.35,{type:'sine',v:.14,to:40});
+    spark(26,'#ffffff');tone(90,.35,{type:'sine',v:.14,to:40});
     later(()=>{phase='card';showBack(true)},REDUCED?0:260);
   }
   function showBack(launch){
     const c=cards[i];
-    stage.innerHTML=`<div class="rays" id="rays"></div><div class="aura a2" id="aura" style="--ac:${RAR[c.rarity].order>=1?glowOf(c.rarity):'#ffffff'}"></div><div class="shock" id="shock"></div>
+    stage.innerHTML=`<div class="rays" id="rays"></div><div class="aura a2" id="aura" style="--ac:#ffffff"></div><div class="shock" id="shock"></div>
       <div class="flip ${launch?'launch':''}" id="flip" style="width:${CW}px"><div class="tilt" id="tilt"><div class="flip-in" id="flipIn"><div class="face back"><div class="cb"><span>IFC</span></div></div><div class="face front">${cardHTML(c,{cw:CW})}<div class="holo"></div></div></div></div>
       <div class="hints" id="hints"></div><div id="rl"></div></div><div class="sparks" id="sparks"></div>`;
     hint.textContent=T('Touche pour retourner','Tap to flip');
@@ -1396,16 +1396,24 @@ function showPack(pk,type,cards,after){
   function tease(){
     const c=cards[i],ord=RAR[c.rarity].order,flip=$('#flip'),hints=$('#hints');phase='tease';skipTo=reveal;
     flip.classList.remove('launch');flip.classList.add('float');
-    if(REDUCED||ord===0){later(reveal,REDUCED?0:250);return}
-    flip.classList.add('glow','g-'+c.rarity);
-    const steps=[];
-    if(ord>=2)steps.push(`<span class="hchip">${c.nat}</span>`);
-    if(ord>=2)steps.push(`<span class="hchip">${POSFULL[c.pos]}</span>`);
-    if(ord>=3){ov.classList.add('dark')}
-    let t=ord===1?350:250;
-    steps.forEach((h,k)=>later(()=>{hints.insertAdjacentHTML('beforeend',h);tone(160+k*90,.25,{type:'square',v:.05,to:120+k*90});noise(.18,.08,0,300);shake(1);spark(10,glowOf(c.rarity))},t+k*750));
-    t+=steps.length*750+(ord>=3?500:ord>=2?150:300);
-    if(ord>=2)later(()=>{flip.classList.add('rumble');sfx.tease()},t-650);
+    if(REDUCED){later(reveal,0);return}
+    /* la lueur monte palier par palier : blanc, puis bleu, violet, jaune… et s'arrête sur la vraie rareté */
+    const TIERS=['common','rare','epic','legendary'];
+    const setTier=k=>{const r=TIERS[k],aura=$('#aura');
+      flip.classList.remove('glow','g-common','g-rare','g-epic','g-legendary');void flip.offsetWidth;flip.classList.add('glow','g-'+r);
+      if(aura){aura.style.setProperty('--ac',glowOf(r));aura.className='aura a'+Math.min(3,k+1)}};
+    setTier(0);
+    let t=650;
+    for(let k=1;k<=ord;k++){
+      later(()=>{
+        setTier(k);spark(10+k*10,glowOf(TIERS[k]));shake(k>=2?2:1);
+        tone(180+k*110,.3,{type:'square',v:.05,to:240+k*140});noise(.18,.08,0,300);
+        if(k===2)hints.insertAdjacentHTML('beforeend',`<span class="hchip">${c.nat}</span>`);
+        if(k===3){hints.insertAdjacentHTML('beforeend',`<span class="hchip">${POSFULL[c.pos]}</span>`);ov.classList.add('dark')}
+        if(k>=2){flip.classList.add('rumble');sfx.tease()}
+      },t);
+      t+=k===1?850:k===2?1000:1100;
+    }
     later(reveal,t);
   }
   /* 4. retournement : 2 tours et demi, onde de choc, rayons, compteur de note */
@@ -2143,7 +2151,7 @@ function tutNext(){
 }
 function tutEnd(skipped){
   TUT.active=false;TUT.single=null;const t=$('#tut');if(t)t.hidden=true;
-  if(!state.tut.done){state.tut.done=true;state.matchT=Math.min(state.matchT,MATCH_EVERY);save();if(skipped)toast('Didacticiel passé : chaque nouveauté sera quand même expliquée');}
+  if(!state.tut.done){state.tut.done=true;state.matchT=skipped?0:Math.min(state.matchT,MATCH_EVERY);save();if(skipped)toast('Didacticiel passé : chaque nouveauté sera quand même expliquée');}
   render();setTimeout(nextFeature,400);
 }
 function tutAction(a){
