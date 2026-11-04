@@ -1018,6 +1018,9 @@ input,textarea{-webkit-user-select:text;user-select:text}
 #kIni{width:90px;font:inherit;font-family:var(--display);font-size:1.2rem;text-transform:uppercase;border:3px solid var(--ink);border-radius:10px;padding:4px 10px}
 @media (max-width:640px){.kgrid{grid-template-columns:1fr}.kprev{position:static;flex-direction:row;flex-wrap:wrap;justify-content:center}.kprev .crestsvg.big{width:80px;height:88px}.kprev .jsvg.big{width:80px;height:80px}.krow{grid-template-columns:1fr}}
 .modal .panel.mpanel:has(.kitm){max-width:800px}
+/* boutons de l'éditeur : séparés des couleurs et toujours visibles en bas */
+.kitm .kctl{padding-bottom:8px}
+.kitm>.mact{position:sticky;bottom:-16px;z-index:2;background:var(--paper);margin:18px -16px -16px;padding:14px 16px 16px;border-top:3px solid var(--paper2)}
 @media (min-width:880px) and (min-height:480px) and (max-width:1180px){.top .hdr .club>div:not(.crestbtn){display:none}}
 /* face-à-face avec bannières */
 .vs2{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
